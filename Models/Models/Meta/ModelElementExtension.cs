@@ -84,6 +84,11 @@ namespace NMF.Models.Meta
         public event EventHandler<ValueChangedEventArgs> ExtendedElementChanged;
         
         /// <summary>
+        /// Gets the Extension for this model element
+        /// </summary>
+        public abstract IExtension GetExtension();
+        
+        /// <summary>
         /// Raises the ExtendedElementChanged event
         /// </summary>
         /// <param name="eventArgs">The event data</param>
@@ -115,14 +120,6 @@ namespace NMF.Models.Meta
             }
             this.OnPropertyChanged("ExtendedElement");
             this.OnExtendedElementChanged(new ValueChangedEventArgs(oldExtendedElement, newExtendedElement));
-        }
-        
-        /// <summary>
-        /// Gets the Class element that describes the structure of the current model element
-        /// </summary>
-        public override NMF.Models.Meta.IClass GetClass()
-        {
-            return NMF.Models.Repository.MetaRepository.Instance.ResolveClass("http://nmf.codeplex.com/nmeta/#//ModelElementExtension/");
         }
         
         /// <summary>
@@ -169,52 +166,11 @@ namespace NMF.Models.Meta
         }
         
         /// <summary>
-        /// Represents a proxy to represent an incremental access to the ExtendedElement property
+        /// Gets the Class for this model element
         /// </summary>
-        private sealed class ExtendedElementProxy : ModelPropertyChange<IModelElementExtension, NMF.Models.Meta.IModelElement>
+        public override IClass GetClass()
         {
-            
-            /// <summary>
-            /// Creates a new observable property access proxy
-            /// </summary>
-            /// <param name="modelElement">The model instance element for which to create the property access proxy</param>
-            public ExtendedElementProxy(IModelElementExtension modelElement) : 
-                    base(modelElement)
-            {
-            }
-            
-            /// <summary>
-            /// Gets or sets the value of this expression
-            /// </summary>
-            public override NMF.Models.Meta.IModelElement Value
-            {
-                get
-                {
-                    return this.ModelElement.ExtendedElement;
-                }
-                set
-                {
-                    this.ModelElement.ExtendedElement = value;
-                }
-            }
-            
-            /// <summary>
-            /// Registers an event handler to subscribe specifically on the changed event for this property
-            /// </summary>
-            /// <param name="handler">The handler that should be subscribed to the property change event</param>
-            protected override void RegisterChangeEventHandler(System.EventHandler<NMF.Expressions.ValueChangedEventArgs> handler)
-            {
-                this.ModelElement.ExtendedElementChanged += handler;
-            }
-            
-            /// <summary>
-            /// Registers an event handler to subscribe specifically on the changed event for this property
-            /// </summary>
-            /// <param name="handler">The handler that should be unsubscribed from the property change event</param>
-            protected override void UnregisterChangeEventHandler(System.EventHandler<NMF.Expressions.ValueChangedEventArgs> handler)
-            {
-                this.ModelElement.ExtendedElementChanged -= handler;
-            }
+            return ((IClass)(NMF.Models.Repository.MetaRepository.Instance.Resolve("http://nmf.codeplex.com/nmeta/#//ModelElementExtension/")));
         }
         
         /// <summary>
@@ -334,6 +290,55 @@ namespace NMF.Models.Meta
             public override IEnumerator<IModelElement> GetEnumerator()
             {
                 return Enumerable.Empty<IModelElement>().Concat(this._parent.ExtendedElement).GetEnumerator();
+            }
+        }
+        
+        /// <summary>
+        /// Represents a proxy to represent an incremental access to the ExtendedElement property
+        /// </summary>
+        private sealed class ExtendedElementProxy : ModelPropertyChange<IModelElementExtension, NMF.Models.Meta.IModelElement>
+        {
+            
+            /// <summary>
+            /// Creates a new observable property access proxy
+            /// </summary>
+            /// <param name="modelElement">The model instance element for which to create the property access proxy</param>
+            public ExtendedElementProxy(IModelElementExtension modelElement) : 
+                    base(modelElement)
+            {
+            }
+            
+            /// <summary>
+            /// Gets or sets the value of this expression
+            /// </summary>
+            public override NMF.Models.Meta.IModelElement Value
+            {
+                get
+                {
+                    return this.ModelElement.ExtendedElement;
+                }
+                set
+                {
+                    this.ModelElement.ExtendedElement = value;
+                }
+            }
+            
+            /// <summary>
+            /// Registers an event handler to subscribe specifically on the changed event for this property
+            /// </summary>
+            /// <param name="handler">The handler that should be subscribed to the property change event</param>
+            protected override void RegisterChangeEventHandler(System.EventHandler<NMF.Expressions.ValueChangedEventArgs> handler)
+            {
+                this.ModelElement.ExtendedElementChanged += handler;
+            }
+            
+            /// <summary>
+            /// Registers an event handler to subscribe specifically on the changed event for this property
+            /// </summary>
+            /// <param name="handler">The handler that should be unsubscribed from the property change event</param>
+            protected override void UnregisterChangeEventHandler(System.EventHandler<NMF.Expressions.ValueChangedEventArgs> handler)
+            {
+                this.ModelElement.ExtendedElementChanged -= handler;
             }
         }
     }
