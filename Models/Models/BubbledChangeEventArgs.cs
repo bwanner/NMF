@@ -20,6 +20,10 @@ namespace NMF.Models
         /// <param name="valueChangeEvent">The original value change event data</param>
         public BubbledChangeEventArgs(IModelElement source, string propertyName, ValueChangedEventArgs valueChangeEvent)
         {
+            if (source == null) throw new ArgumentNullException("source");
+            if (propertyName == null) throw new ArgumentNullException("propertyName");
+            if (valueChangeEvent == null) throw new ArgumentNullException("valueChangeEvent");
+
             Element = source;
             PropertyName = propertyName;
             OriginalEventArgs = valueChangeEvent;
@@ -33,6 +37,10 @@ namespace NMF.Models
         /// <param name="collectionChangedEvent">The original collection change event data</param>
         public BubbledChangeEventArgs(IModelElement source, string propertyName, NotifyCollectionChangedEventArgs collectionChangedEvent)
         {
+            if (source == null) throw new ArgumentNullException("source");
+            if (propertyName == null) throw new ArgumentNullException("propertyName");
+            if (collectionChangedEvent == null) throw new ArgumentNullException("collectionChangedEvent");
+
             Element = source;
             PropertyName = propertyName;
             OriginalEventArgs = collectionChangedEvent;
@@ -44,6 +52,8 @@ namespace NMF.Models
         /// <param name="newElement">The model element that has been created</param>
         public BubbledChangeEventArgs(IModelElement newElement)
         {
+            if (newElement == null) throw new ArgumentNullException("newElement");
+
             Element = newElement;
         }
 
@@ -76,6 +86,14 @@ namespace NMF.Models
         public bool IsPropertyChangedEvent
         {
             get { return OriginalEventArgs is ValueChangedEventArgs; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the change was that a new element was created
+        /// </summary>
+        public bool IsElementCreated
+        {
+            get { return OriginalEventArgs == null && PropertyName == null; }
         }
     }
 }

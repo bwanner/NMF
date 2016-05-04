@@ -94,7 +94,7 @@ namespace NMF.Models
                 }
                 if (newParent != null)
                 {
-                    if (EnforceModels && newParent.Model == null)
+                    if (EnforceModels && newParent.Model == null && oldParent != null)
                     {
                         var oldModel = oldParent.Model;
                         if (oldModel != null)
@@ -116,7 +116,7 @@ namespace NMF.Models
         /// <remarks>This method is not called if an existing model element is moved in the composition hierarchy</remarks>
         protected virtual void OnChildCreated(IModelElement child)
         {
-
+            OnBubbledChange(new BubbledChangeEventArgs(child));
         }
 
         /// <summary>
